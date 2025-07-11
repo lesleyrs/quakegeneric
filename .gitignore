@@ -1,3 +1,5 @@
+/source/index.html
+/source/*.wasm*
 
 # local files
 .local/

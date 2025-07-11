@@ -61,3 +61,6 @@ $(EXECNAME): $(OBJS) $(OBJS_SDL2)
 
 $(LIBNAME): $(OBJS)
 	$(AR) rcs $@ $(OBJS)
+
+serve:
+	esbuild --servedir=.

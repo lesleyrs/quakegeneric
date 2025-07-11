@@ -19,6 +19,8 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // sys_null.h -- null system driver to aid porting efforts
 
+#include <js/glue.h>
+
 #include "quakedef.h"
 #include "errno.h"
 
@@ -198,6 +200,9 @@ void Sys_Sleep (void)
 
 void Sys_SendKeyEvents (void)
 {
+	// NOTE: this consumes ingame keys when paused, is it ok?
+	IN_Commands();
+	JS_requestAnimationFrame();
 }
 
 void Sys_HighFPPrecision (void)

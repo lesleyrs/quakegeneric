@@ -1706,7 +1706,7 @@ void COM_AddGameDirectory (char *dir)
 //
 	for (i=0 ; ; i++)
 	{
-		sprintf (pakfile, "%s/pak%i.pak", dir, i);
+		sprintf (pakfile, "%s/PAK%i.PAK", dir, i);
 		pak = COM_LoadPackFile (pakfile);
 		if (!pak)
 			break;
