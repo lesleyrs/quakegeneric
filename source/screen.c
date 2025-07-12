@@ -641,8 +641,8 @@ void SCR_ScreenShot_f (void)
 	D_EnableBackBufferAccess ();	// enable direct drawing of console to back
 									//  buffer
 
-	WritePCXfile (pcxname, vid.buffer, vid.width, vid.height, vid.rowbytes,
-				  host_basepal);
+	// WritePCXfile (pcxname, vid.buffer, vid.width, vid.height, vid.rowbytes,
+	// 			  host_basepal);
 
 	D_DisableBackBufferAccess ();	// for adapters that can't stay mapped in
 									//  for linear writes all the time
