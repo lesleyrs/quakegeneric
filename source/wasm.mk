@@ -14,7 +14,7 @@ LDFLAGS+=-lc-dbg
 endif
 
 CC=clang --target=wasm32 --sysroot=../../../wasmlite/libc -nodefaultlibs
-LDFLAGS+= -Wl,--allow-undefined -Wl,--export-table
+LDFLAGS+= -Wl,--export-table
 
 override CFLAGS+=-m32 -std=gnu99 -Wall
 override LDFLAGS+=-m32 -lm
