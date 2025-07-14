@@ -27,7 +27,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <string.h>
 
 #include <js/glue.h>
-#include <js/key_codes.h>
+#include <js/dom_pk_codes.h>
 
 // TODO: sound, float formatting pdclib %f bugs, wheel/joy input
 void __unordtf2(void) {}
@@ -51,8 +51,8 @@ static int mouse_x, mouse_y;
 static float joy_axes[QUAKEGENERIC_JOY_MAX_AXES];
 
 void onblur(void);
-bool onkeydown(void* userData, int keyCode, int modifiers);
-bool onkeyup(void* userData, int keyCode, int modifiers);
+bool onkeydown(void* userData, int key, int code, int modifiers);
+bool onkeyup(void* userData, int key, int code, int modifiers);
 bool onmousemove(void *userData, int button, int x, int y);
 bool onmousedown(void *userData, int button, int x, int y);
 bool onmouseup(void *userData, int button, int x, int y);
@@ -104,97 +104,100 @@ static int ConvertToQuakeKey(unsigned int key)
 
 	switch (key)
 	{
-		case DOM_VK_TAB:
+		case DOM_PK_TAB:
 			qkey = K_TAB;
 			break;
-		case DOM_VK_RETURN:
+		case DOM_PK_ENTER:
 			qkey = K_ENTER;
 			break;
-		case DOM_VK_ESCAPE:
+		case DOM_PK_ESCAPE:
 			qkey = K_ESCAPE;
 			break;
-		case DOM_VK_SPACE:
+		case DOM_PK_SPACE:
 			qkey = K_SPACE;
 			break;
-		case DOM_VK_BACK_SPACE:
+		case DOM_PK_BACKSPACE:
 			qkey = K_BACKSPACE;
 			break;
-		case DOM_VK_UP:
+		case DOM_PK_ARROW_UP:
 			qkey = K_UPARROW;
 			break;
-		case DOM_VK_DOWN:
+		case DOM_PK_ARROW_DOWN:
 			qkey = K_DOWNARROW;
 			break;
-		case DOM_VK_LEFT:
+		case DOM_PK_ARROW_LEFT:
 			qkey = K_LEFTARROW;
 			break;
-		case DOM_VK_RIGHT:
+		case DOM_PK_ARROW_RIGHT:
 			qkey = K_RIGHTARROW;
 			break;
-		case DOM_VK_ALT:
+		case DOM_PK_ALT_LEFT:
+		case DOM_PK_ALT_RIGHT:
 			qkey = K_ALT;
 			break;
-		case DOM_VK_CONTROL:
+		case DOM_PK_CONTROL_LEFT:
+		case DOM_PK_CONTROL_RIGHT:
 			qkey = K_CTRL;
 			break;
-		case DOM_VK_SHIFT:
+		case DOM_PK_SHIFT_LEFT:
+		case DOM_PK_SHIFT_RIGHT:
 			qkey = K_SHIFT;
 			break;
-		case DOM_VK_F1:
+		case DOM_PK_F1:
 			qkey = K_F1;
 			break;
-		case DOM_VK_F2:
+		case DOM_PK_F2:
 			qkey = K_F2;
 			break;
-		case DOM_VK_F3:
+		case DOM_PK_F3:
 			qkey = K_F3;
 			break;
-		case DOM_VK_F4:
+		case DOM_PK_F4:
 			qkey = K_F4;
 			break;
-		case DOM_VK_F5:
+		case DOM_PK_F5:
 			qkey = K_F5;
 			break;
-		case DOM_VK_F6:
+		case DOM_PK_F6:
 			qkey = K_F6;
 			break;
-		case DOM_VK_F7:
+		case DOM_PK_F7:
 			qkey = K_F7;
 			break;
-		case DOM_VK_F8:
+		case DOM_PK_F8:
 			qkey = K_F8;
 			break;
-		case DOM_VK_F9:
+		case DOM_PK_F9:
 			qkey = K_F9;
 			break;
-		case DOM_VK_F10:
+		case DOM_PK_F10:
 			qkey = K_F10;
 			break;
-		case DOM_VK_F11:
+		case DOM_PK_F11:
 			qkey = K_F11;
 			break;
-		case DOM_VK_F12:
+		case DOM_PK_F12:
 			qkey = K_F12;
 			break;
-		case DOM_VK_INSERT:
+		case DOM_PK_INSERT:
 			qkey = K_INS;
 			break;
-		case DOM_VK_DELETE:
+		case DOM_PK_DELETE:
 			qkey = K_DEL;
 			break;
-		case DOM_VK_PAGE_DOWN:
+		case DOM_PK_PAGE_DOWN:
 			qkey = K_PGDN;
 			break;
-		case DOM_VK_PAGE_UP:
+		case DOM_PK_PAGE_UP:
 			qkey = K_PGUP;
 			break;
-		case DOM_VK_HOME:
+		case DOM_PK_HOME:
 			qkey = K_HOME;
 			break;
-		case DOM_VK_END:
+		case DOM_PK_END:
 			qkey = K_END;
 			break;
-		case DOM_VK_PAUSE:
+		case DOM_PK_PAUSE:
 			qkey = K_PAUSE;
 			break;
 		default:
@@ -283,7 +286,7 @@ void QG_SetPalette(unsigned char palette[768])
 	memcpy(pal, palette, 768);
 }
 
-// TODO mouse btns can still get stuck clicking outside canvas, not sure how to fix
+// NOTE: mouse btns can still get stuck clicking outside canvas, not sure how to fix
 void onblur(void) {
 	keybuffer_start = 0;
 	keybuffer_len = 0;
@@ -292,18 +295,18 @@ void onblur(void) {
 	}
 }
 
-bool onkeydown(void* userData, int keyCode, int modifiers) {
+bool onkeydown(void* userData, int key, int code, int modifiers) {
     (void)userData,(void)modifiers;
-	(void) KeyPush(1, ConvertToQuakeKey(keyCode));
-    if (keyCode == DOM_VK_F12) {
+	(void) KeyPush(1, ConvertToQuakeKey(code));
+    if (code == DOM_PK_F12) {
         return 0;
     }
     return 1;
 }
-bool onkeyup(void* userData, int keyCode, int modifiers) {
+bool onkeyup(void* userData, int key, int code, int modifiers) {
     (void)userData,(void)modifiers;
-	(void) KeyPush(0, ConvertToQuakeKey(keyCode));
-    if (keyCode == DOM_VK_F12) {
+	(void) KeyPush(0, ConvertToQuakeKey(code));
+    if (code == DOM_PK_F12) {
         return 0;
     }
     return 1;
