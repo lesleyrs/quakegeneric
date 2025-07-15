@@ -98,11 +98,11 @@ static int ConvertToQuakeButton(unsigned char button)
 	return qbutton;
 }
 
-static int ConvertToQuakeKey(unsigned int key)
+static int ConvertToQuakeKey(int key, int code)
 {
 	int qkey;
 
-	switch (key)
+	switch (code)
 	{
 		case DOM_PK_TAB:
 			qkey = K_TAB;
@@ -291,13 +291,13 @@ void onblur(void) {
 	keybuffer_start = 0;
 	keybuffer_len = 0;
 	for (int i = 1; i < KEYBUFFERSIZE; i++) {
-		KeyPush(0, ConvertToQuakeKey(i));
+		KeyPush(0, i);
 	}
 }
 
 bool onkeydown(void* userData, int key, int code, int modifiers) {
     (void)userData,(void)modifiers;
-	(void) KeyPush(1, ConvertToQuakeKey(code));
+	(void) KeyPush(1, ConvertToQuakeKey(key, code));
     if (code == DOM_PK_F12) {
         return 0;
     }
@@ -305,7 +305,7 @@ bool onkeydown(void* userData, int key, int code, int modifiers) {
 }
 bool onkeyup(void* userData, int key, int code, int modifiers) {
     (void)userData,(void)modifiers;
-	(void) KeyPush(0, ConvertToQuakeKey(code));
+	(void) KeyPush(0, ConvertToQuakeKey(key, code));
     if (code == DOM_PK_F12) {
         return 0;
     }

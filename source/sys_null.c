@@ -19,7 +19,9 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 */
 // sys_null.h -- null system driver to aid porting efforts
 
+#ifdef __wasm
 #include <js/glue.h>
+#endif
 
 #include "quakedef.h"
 #include "errno.h"
@@ -200,9 +202,11 @@ void Sys_Sleep (void)
 
 void Sys_SendKeyEvents (void)
 {
+#ifdef __wasm
 	// NOTE: this consumes ingame keys when paused, is it ok?
 	IN_Commands();
 	JS_requestAnimationFrame();
+#endif
 }
 
 void Sys_HighFPPrecision (void)
