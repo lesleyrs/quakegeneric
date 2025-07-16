@@ -61,7 +61,6 @@ void QG_Init(void)
 {
 	JS_createCanvas(QUAKEGENERIC_RES_X, QUAKEGENERIC_RES_Y);
 	JS_setTitle("Quake");
-	JS_requestPointerLock();
 
     JS_addBlurEventListener(onblur);
     JS_addMouseMoveEventListener(NULL, onmousemove);
@@ -320,6 +319,8 @@ bool onmousemove(void *userData, int button, int x, int y) {
 }
 bool onmousedown(void *userData, int button, int x, int y) {
 	(void)x,(void)y;
+	JS_requestPointerLock();
+
 	button = ConvertToQuakeButton(button);
 	if (button != -1) {
 		(void) KeyPush(1, button);
