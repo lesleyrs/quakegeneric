@@ -63,7 +63,7 @@ void QG_Init(void)
     JS_addBlurEventListener(onblur);
     JS_addMouseMoveEventListener(NULL, onmousemove);
     JS_addMouseEventListener(NULL, onmouse);
-    JS_addKeyboardEventListener(NULL, onkey);
+    JS_addKeyEventListener(NULL, onkey);
 
 	keybuffer_len = 0;
 	keybuffer_start = 0;
