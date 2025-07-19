@@ -228,6 +228,7 @@ static int KeyPush(int down, int key)
 {
 	if (keybuffer_len == KEYBUFFERSIZE)
 		return 0; // overflow
+	// TODO: small chance of assert trigger why?
 	assert(key > 0);
 	if (down) {
 		key = -key;
