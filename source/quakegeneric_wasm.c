@@ -51,11 +51,9 @@ static int mouse_x, mouse_y;
 static float joy_axes[QUAKEGENERIC_JOY_MAX_AXES];
 
 void onblur(void);
-bool onkeydown(void* userData, int key, int code, int modifiers);
-bool onkeyup(void* userData, int key, int code, int modifiers);
-bool onmousemove(void *userData, int button, int x, int y);
-bool onmousedown(void *userData, int button, int x, int y);
-bool onmouseup(void *userData, int button, int x, int y);
+bool onmousemove(void *userData, int x, int y);
+bool onmouse(void *userData, bool pressed, int button);
+bool onkey(void* userData, bool pressed, int key, int code, int modifiers);
 
 void QG_Init(void)
 {
@@ -64,10 +62,8 @@ void QG_Init(void)
 
     JS_addBlurEventListener(onblur);
     JS_addMouseMoveEventListener(NULL, onmousemove);
-    JS_addMouseDownEventListener(NULL, onmousedown);
-    JS_addMouseUpEventListener(NULL, onmouseup);
-    JS_addKeyDownEventListener(NULL, onkeydown);
-    JS_addKeyUpEventListener(NULL, onkeyup);
+    JS_addMouseEventListener(NULL, onmouse);
+    JS_addKeyboardEventListener(NULL, onkey);
 
 	keybuffer_len = 0;
 	keybuffer_start = 0;
@@ -294,44 +290,25 @@ void onblur(void) {
 	}
 }
 
-bool onkeydown(void* userData, int key, int code, int modifiers) {
-    (void)userData,(void)modifiers;
-	(void) KeyPush(1, ConvertToQuakeKey(key, code));
-    if (code == DOM_PK_F12) {
-        return 0;
-    }
-    return 1;
-}
-bool onkeyup(void* userData, int key, int code, int modifiers) {
-    (void)userData,(void)modifiers;
-	(void) KeyPush(0, ConvertToQuakeKey(key, code));
+bool onkey(void* userData, bool pressed, int key, int code, int modifiers) {
+	(void) KeyPush(pressed, ConvertToQuakeKey(key, code));
     if (code == DOM_PK_F12) {
         return 0;
     }
     return 1;
 }
 
-bool onmousemove(void *userData, int button, int x, int y) {
-	(void)userData,(void)button;
+bool onmousemove(void *userData, int x, int y) {
 	mouse_x += x;
 	mouse_y += y;
 	return 0;
 }
-bool onmousedown(void *userData, int button, int x, int y) {
-	(void)x,(void)y;
+bool onmouse(void *userData, bool pressed, int button) {
 	JS_requestPointerLock();
 
 	button = ConvertToQuakeButton(button);
 	if (button != -1) {
-		(void) KeyPush(1, button);
-	}
-	return 0;
-}
-bool onmouseup(void *userData, int button, int x, int y) {
-	(void)x,(void)y;
-	button = ConvertToQuakeButton(button);
-	if (button != -1) {
-		(void) KeyPush(0, button);
+		(void) KeyPush(pressed, button);
 	}
 	return 0;
 }
