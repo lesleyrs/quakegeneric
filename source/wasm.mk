@@ -5,8 +5,8 @@ LIBEXT?=.a
 BINEXT?=.wasm
 OBJEXT?=.o
 
-ifdef ($(DEBUG),0)
-CFLAGS+=-Oz -ffast-math -flto
+ifeq ($(DEBUG),0)
+CFLAGS+=-Oz -ffast-math -flto -fno-inline-functions
 LDFLAGS+=-lc
 else
 CFLAGS+=-g
