@@ -626,8 +626,8 @@ void SCR_ScreenShot_f (void)
 		pcxname[5] = i/10 + '0'; 
 		pcxname[6] = i%10 + '0'; 
 		sprintf (checkname, "%s/%s", com_gamedir, pcxname);
-		// if (Sys_FileTime(checkname) == -1)
-		// 	break;	// file doesn't exist
+		if (Sys_FileTime(checkname) == -1)
+			break;	// file doesn't exist
 	} 
 	if (i==100) 
 	{
@@ -641,6 +641,7 @@ void SCR_ScreenShot_f (void)
 	D_EnableBackBufferAccess ();	// enable direct drawing of console to back
 									//  buffer
 
+	// TODO proper file writing mode
 	// WritePCXfile (pcxname, vid.buffer, vid.width, vid.height, vid.rowbytes,
 	// 			  host_basepal);
 
