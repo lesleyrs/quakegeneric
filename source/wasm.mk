@@ -5,6 +5,7 @@ LIBEXT?=.a
 BINEXT?=.wasm
 OBJEXT?=.o
 
+CFLAGS = -fno-builtin
 ifeq ($(DEBUG),0)
 CFLAGS+=-Oz -ffast-math -flto -fno-inline-functions
 LDFLAGS+=-lc
