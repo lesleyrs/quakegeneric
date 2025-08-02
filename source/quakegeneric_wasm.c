@@ -50,7 +50,7 @@ static int keybuffer_start;  // index of next item to be read
 static int mouse_x, mouse_y;
 static float joy_axes[QUAKEGENERIC_JOY_MAX_AXES];
 
-void onblur(void);
+void onblur(void *userData);
 bool onmousemove(void *userData, int x, int y);
 bool onmouse(void *userData, bool pressed, int button);
 bool onkey(void* userData, bool pressed, int key, int code, int modifiers);
@@ -60,9 +60,8 @@ void QG_Init(void)
 	JS_createCanvas(QUAKEGENERIC_RES_X, QUAKEGENERIC_RES_Y);
 	JS_setTitle("Quake");
 
-    JS_addBlurEventListener(onblur);
-    JS_addMouseMoveEventListener(NULL, onmousemove);
-    JS_addMouseEventListener(NULL, onmouse);
+    JS_addBlurEventListener(NULL, onblur);
+    JS_addMouseEventListener(NULL, onmouse, onmousemove);
     JS_addKeyEventListener(NULL, onkey);
 
 	keybuffer_len = 0;
@@ -283,7 +282,7 @@ void QG_SetPalette(unsigned char palette[768])
 }
 
 // NOTE: mouse btns can still get stuck clicking outside canvas, not sure how to fix
-void onblur(void) {
+void onblur(void *userData) {
 	keybuffer_start = 0;
 	keybuffer_len = 0;
 	for (int i = 1; i < KEYBUFFERSIZE; i++) {
