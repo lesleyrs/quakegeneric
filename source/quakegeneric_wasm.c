@@ -54,6 +54,7 @@ void onblur(void *userData);
 bool onmousemove(void *userData, int x, int y);
 bool onmouse(void *userData, bool pressed, int button);
 bool onkey(void* userData, bool pressed, int key, int code, int modifiers);
+bool onwheel(void *userData, double delta);
 
 void QG_Init(void)
 {
@@ -61,7 +62,7 @@ void QG_Init(void)
 	JS_setTitle("Quake");
 
     JS_addBlurEventListener(NULL, onblur);
-    JS_addMouseEventListener(NULL, onmouse, onmousemove);
+    JS_addMouseEventListener(NULL, onmouse, onmousemove, onwheel);
     JS_addKeyEventListener(NULL, onkey);
 
 	keybuffer_len = 0;
@@ -298,6 +299,16 @@ bool onkey(void* userData, bool pressed, int key, int code, int modifiers) {
     return 1;
 }
 
+bool onwheel(void *userData, double delta) {
+	if (delta > 0) {
+		(void) KeyPush(1, K_MWHEELUP);
+		(void) KeyPush(0, K_MWHEELUP);
+	} else if (delta < 0) {
+		(void) KeyPush(1, K_MWHEELDOWN);
+		(void) KeyPush(0, K_MWHEELDOWN);
+	}
+	return 0;
+}
 bool onmousemove(void *userData, int x, int y) {
 	mouse_x += x;
 	mouse_y += y;
@@ -313,18 +324,6 @@ bool onmouse(void *userData, bool pressed, int button) {
 	return 0;
 }
 // TODO
-// 		case SDL_MOUSEWHEEL:
-// 			if (event.wheel.y > 0)
-// 			{
-// 				(void) KeyPush(1, K_MWHEELUP);
-// 				(void) KeyPush(0, K_MWHEELUP);
-// 			}
-// 			else if (event.wheel.y < 0)
-// 			{
-// 				(void) KeyPush(1, K_MWHEELDOWN);
-// 				(void) KeyPush(0, K_MWHEELDOWN);
-// 			}
-// 			break;
 // 		case SDL_JOYAXISMOTION:
 // 			if (event.jaxis.axis < QUAKEGENERIC_JOY_MAX_AXES) {
 // 				joy_axes[event.jaxis.axis] = event.jaxis.value / 32767.0f;
