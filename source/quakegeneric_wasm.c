@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 #include <js/glue.h>
 #include <js/dom_pk_codes.h>
 
-// TODO: sound, float formatting pdclib %f bugs, wheel/joy input
+// TODO: float formatting pdclib %f bugs, joy input
 void __unordtf2(void) {}
 #include "quakedef.h"
 double atof(const char *nptr) {
@@ -58,7 +58,7 @@ bool onwheel(void *userData, double delta);
 
 void QG_Init(void)
 {
-	JS_createCanvas(QUAKEGENERIC_RES_X, QUAKEGENERIC_RES_Y);
+	JS_createCanvas(QUAKEGENERIC_RES_X, QUAKEGENERIC_RES_Y, "2d");
 	JS_setTitle("Quake");
 
     JS_addBlurEventListener(NULL, onblur);
