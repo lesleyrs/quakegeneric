@@ -52,7 +52,7 @@ static float joy_axes[QUAKEGENERIC_JOY_MAX_AXES];
 
 void onblur(void *userData);
 bool onmousemove(void *userData, int x, int y);
-bool onmouse(void *userData, bool pressed, int button);
+void onmouse(void *userData, bool pressed, int button);
 bool onkey(void* userData, bool pressed, int key, int code, int modifiers);
 bool onwheel(void *userData, double delta);
 
@@ -314,14 +314,13 @@ bool onmousemove(void *userData, int x, int y) {
 	mouse_y += y;
 	return 0;
 }
-bool onmouse(void *userData, bool pressed, int button) {
+void onmouse(void *userData, bool pressed, int button) {
 	JS_requestPointerLock();
 
 	button = ConvertToQuakeButton(button);
 	if (button != -1) {
 		(void) KeyPush(pressed, button);
 	}
-	return 0;
 }
 // TODO
 // 		case SDL_JOYAXISMOTION:
